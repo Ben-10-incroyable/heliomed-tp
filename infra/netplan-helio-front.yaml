@@ -1,0 +1,11 @@
+# A copier sur helio-front dans /etc/netplan/99-helio.yaml puis :
+#   sudo chmod 600 /etc/netplan/99-helio.yaml && sudo netplan apply
+# Verifiez d'abord le nom des interfaces avec : ip -br a
+network:
+  version: 2
+  ethernets:
+    enp0s3:            # adaptateur 1 : NAT (Internet, provisioning)
+      dhcp4: true
+    enp0s8:            # adaptateur 2 : host-only (reseau labo isole)
+      dhcp4: false
+      addresses: [192.168.56.10/24]
