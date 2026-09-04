@@ -7,9 +7,9 @@ Périmètre commun aux 5 exercices du TP.
 
 | Rôle | Membre | Périmètre |
 |---|---|---|
-| A | _à compléter_ | Infra, VM, Docker, réseau, nmap, dépôt Git |
-| B | _à compléter_ | Sécurité applicative : OWASP ZAP, Trivy |
-| C | _à compléter_ | Analyse : registre d'actifs, STRIDE, matrice de risque, EBIOS RM |
+| A | Ruben | Infra, VM, Docker, réseau, nmap, dépôt Git |
+| B | Etiaine | Sécurité applicative : OWASP ZAP, Trivy |
+| C | Evan | Analyse : registre d'actifs, STRIDE, matrice de risque, EBIOS RM |
 
 ## Architecture du labo
 
