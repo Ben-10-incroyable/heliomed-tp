@@ -1,0 +1,56 @@
+# VM helio-app (192.168.56.11) — applicatif + base de données HelioMed
+# Etat initial du labo : exposition volontairement large, constatee a l'exercice 1.
+name: heliomed-app
+
+services:
+  api:
+    # Represente l'API de prise de rendez-vous HelioMed
+    image: bkimminich/juice-shop:latest
+    container_name: helio-api
+    restart: unless-stopped
+    ports:
+      # CONSTAT Ex.1 : joignable sans passer par le reverse proxy
+      - "192.168.56.11:3000:3000"
+    networks:
+      - helio-back
+
+  legacy:
+    # Represente le back-office historique d'HelioMed
+    image: vulnerables/web-dvwa:latest
+    container_name: helio-legacy
+    restart: unless-stopped
+    ports:
+      - "192.168.56.11:8080:80"
+    networks:
+      - helio-back
+
+  db:
+    # Base patients (donnees de sante = donnees sensibles au sens du RGPD)
+    # Version ancienne conservee volontairement : fournit des CVE reelles a Trivy.
+    image: postgres:13.4-alpine
+    container_name: helio-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      # CONSTAT Ex.1 : SGBD de sante expose sur le reseau, sans chiffrement TLS
+      - "192.168.56.11:5432:5432"
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d:ro
+    networks:
+      - helio-back
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  dbdata:
+
+networks:
+  helio-back:
+    driver: bridge
